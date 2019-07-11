@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        .hide{
+            display: none;
+        }
+        .shadow{
+            /*相对于窗口*/
+            position: fixed;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            top: 0;
+            background-color: black;
+            opacity: 0.4;
+            z-index: 999;
+        }
+        .loading{
+            position: fixed;
+            width: 32px;
+            height: 32px;
+            left: 50%;
+            top:50%;
+            margin-left: -16px;
+            margin-top: -16px;
+            background-image: url("/static/images/loading.gif");
+
+        }
+        .add-modal{
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            width: 400px;
+            height: 300px;
+            z-index: 1000;
+            background-color: white;
+            margin-left: -200px;
+            margin-top: -200px;
+        }
+    </style>
+</head>
+<body>
+<h1>老师列表</h1>
+<a href="/add_teacher/">添加</a>
+<a href="" id="btnAdd">对话框添加</a>
+<table border="1px">
+ <thead>
+<tr>
+    <th>ID</th>
+    <th>老师姓名</th>
+    <th>班级名称</th>
+    <th>操作</th>
+</tr>
+</thead>
+
+<tbody>
+{% for row in teacher_list %}
+    <tr>
+    <td>{{ row.tid }}</td>
+    <td>{{ row.name }}</td>
+
+    <td>{% for title in row.cnames  %}
+            <span>{{ title }}</span>
+        {% endfor %}
+
+    </td>
+
+
+    <td>
+        <a href="/edit_teacher/?nid={{ row.tid }}">编辑</a>
+        |
+        <a href="">删除</a>
+    </td>
+    </tr>
+{% endfor %}
+</tbody>
+
+
+
+</table>
+<div id="shadow" class="shadow hide"></div>
+<div id="loading" class="loading hide"></div>
+<div id="addModal" class="add-modal hide">
+     <p>
+            老师姓名：<input type="text" name="name" id="addName" />
+        </p>
+        <p>
+            <select id="classIds"  multiple size="10">
+
+            </select>
+        </p>
+        <a id="addSubmit">提交</a>
+</div>
+<script src="/static/jquery-1.12.4.js"></script>
+<script>
+    $(function () {
+        bindAdd();
+    });
+    {#function bindAdd() {#}
+    {#    $("#btnAdd").click(function () {#}
+    {#        $("#shadow,#loading").removeClass("hide");#}
+    {#        $.ajax({#}
+    {#            url:/get_all_class/,#}
+    {#            type:"GET",#}
+    {#            dataType:JSON,#}
+    {#            success:function (arg) {#}
+    {#                $.each(arg,function (i,row) {#}
+    {#                    var tag = document.createElement("option");#}
+    {#                    tag.innerHTML = row.name;#}
+    {#                    tag.setAttribute("value",row.tid);#}
+    {#                    $("#classIds").append(tag);#}
+    {#                });#}
+    {#                $('#loading').addClass('hide');#}
+    {#                $('#addModal').removeClass('hide');#}
+    {#            }#}
+    {#        })#}
+    {#    })#}
+    {#}#}
+     function bindAdd(){
+            $('#btnAdd').click(function(){
+                $('#shadow,#loading').removeClass('hide');
+                /*
+                发送ajax请求，获取所有班级信息
+                再classIds下拉框中生成option
+                 */
+                $.ajax({
+                    url:'/get_all_class/',
+                    type:'GET',
+                    dataType: 'JSON',
+                    success:function(arg){
+                        /*
+                        arg = [
+                            {id:1,title:xx}
+                            {id:1,title:xx}
+                            {id:1,title:xx}
+                        ]
+                        */
+                        //console.log(arg);
+                        // 将所有的数据添加到select,option
+                        $.each(arg,function(i,row){
+                            var tag = document.createElement('option');
+                            tag.innerHTML = row.name;
+                            tag.setAttribute('value',row.id);
+
+                            $('#classIds').append(tag);
+                        });
+                        $('#loading').addClass('hide');
+                        $('#addModal').removeClass('hide');
+                    }
+                })
+
+            })
+        }
+
+</script>
+
+
+
+</body>
+</html>

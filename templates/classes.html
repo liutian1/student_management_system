@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+
+    <style>
+        .hide{
+            display: none;
+        }
+        .shadow{
+            position: fixed;
+            left: 0;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            background-color: black;
+            opacity: 0.4;
+            z-index: 999;
+        }
+        .modal{
+            z-index: 1000;
+            position: fixed;
+            left: 50%;
+            top: 50%;
+            height: 300px;
+            width: 400px;
+            background-color: white;
+            margin-left: -200px;
+            margin-top: -150px;
+        }
+        .edit{
+            z-index: 1000;
+            position: fixed;
+            left: 50%;
+            top: 50%;
+            height: 300px;
+            width: 400px;
+            background-color: white;
+            margin-left: -200px;
+            margin-top: -150px;
+        }
+    </style>
+    <link rel="stylesheet" href="/static/bootstrap-3.3.7-dist/css/bootstrap.css">
+</head>
+<body>
+    <h1>班级列表</h1>
+    <div>
+        <a href="/add_class/">添加</a>
+        <a onclick="showModal();">对话框添加</a>
+    </div>
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>班级名称</th>
+                <th>操作</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for row in class_list %}
+                <tr>
+                    <td>{{ row.id }}</td>
+                    <td>{{ row.name }}</td>
+                    <td>
+                        <a href="/edit_class/?nid={{ row.id }}">编辑</a>
+                        |
+                        <a href="/del_class/?nid={{ row.id }}">删除</a>
+                        |
+                        <a onclick="modeledit(this);">对话框编辑</a>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <div id="shadow" class="shadow hide"></div>
+    <div id="modal" class="modal hide">
+
+        <p>
+            <input id="title" type="text" name="name" />
+        </p>
+        <input type="button" value="提交" onclick="AjaxSend();"  /><span id="errormsg"></span>
+        <input type="button" value="取消" onclick="cancleModal();"  />
+
+    </div>
+
+    <div id="edit" class="modal hide">
+
+        <h1>编辑班级</h1>
+
+        <p>班级名称:
+            <input id="editname" type="text" name="name">
+            <input type="text" id="editid" name="id" style="display:none">
+
+
+        </p>
+
+        <input type="button" value="提交" onclick="Ajaxedit();"  /><span id="errormsg"></span>
+        <input type="button" value="取消" onclick="cancleModal();"  />
+
+
+    </div>
+
+    <script type="text/javascript" src="/static/jquery-1.12.4.js"></script>
+    <script>
+
+        function modeledit(ths) {
+            document.getElementById('shadow').classList.remove('hide');
+            document.getElementById('edit').classList.remove('hide');
+
+            var row = $(ths).parent().prevAll();
+            var content = $(row[0]).text();
+            $("#editname").val(content);
+
+            var contentid = $(row[1]).text();
+            $("#editid").val(contentid);
+
+
+
+        }
+
+        function showModal(){
+            document.getElementById('shadow').classList.remove('hide');
+            document.getElementById('modal').classList.remove('hide');
+        }
+
+
+
+        function cancleModal(){
+            document.getElementById('shadow').classList.add('hide');
+            document.getElementById('edit').classList.add('hide');
+        }
+        function AjaxSend(){
+            $.ajax({
+                url: '/modal_add_class/?nid={{ result.id }}',
+                type: 'POST',
+                data: {'name': $('#title').val()},
+                success: function(data){
+                    // 当服务端处理完成后，返回数据时，该函数自动调用
+                    // data=服务端返回的值
+                    console.log(data);
+                    if(data == "ok"){
+                        location.href= "/classes/";
+                    }else{
+                        $('#errormsg').text(data);
+                    }
+                }
+            })
+        }
+        function Ajaxedit(){
+            var nid = $("#editid").val();
+            var name = $("#editname").val();
+            $.ajax({
+                url: '/modal_edit_class/',
+                type: 'POST',
+                data: {'name': name,"nid":nid},
+                success: function(data){
+                    // 当服务端处理完成后，返回数据时，该函数自动调用
+                    // data=服务端返回的值
+                    console.log(data);
+                    if(data == "ok"){
+                        {#location.href= "/classes/"; #}
+                        location.reload()
+                    }else{
+                        $('#errormsg').text(data);
+                    }
+                }
+            })
+        }
+    </script>
+</body>
+</html>

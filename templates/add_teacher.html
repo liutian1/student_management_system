@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+     <h1>添加老师</h1>
+    <form method="POST" action="/add_teacher/">
+        <p><input type="text" name="name" placeholder="老师姓名" autocomplete="off" /></p>
+        <p>
+            <select multiple size="5" name="class_ids">
+                {% for item in class_list %}
+                    <option value="{{ item.id }}">{{ item.name }}</option>
+                {% endfor %}
+            </select>
+        </p>
+        <input type="submit" value="提交" />
+    </form>
+
+</body>
+</html>
