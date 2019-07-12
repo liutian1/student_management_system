@@ -3,8 +3,68 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
+    <link rel="stylesheet" href="/static/bootstrap-3.3.7-dist/css/bootstrap.css">
+    <link rel="stylesheet" href="/static/font-awesome-4.7.0/css/font-awesome.css">
+    <style>
+        body {
+            margin: 0;
+        }
+        .left{
+            float: left;
+        }
+        .right{
+            float: right;
+        }
+        .pg-header {
+            height: 48px;
+            min-width: 1190px;
+            background-color: #204d74;
+            line-height: 48px;
+
+        }
+        .pg-header .logo {
+            color: #fff;
+            font-size: 18px;
+            width: 200px;
+            text-align: center;
+            border-right: 1px solid #000;
+
+        }
+        .menus{
+            width: 200px;
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            top: 48px;
+            background-color: cyan;
+        }
+        .content{
+            position: absolute;
+            left: 200px;
+            right: 0;
+            bottom: 0;
+            top: 48px;
+            background-color: red;
+            overflow: scroll;
+        }
+    </style>
 </head>
 <body>
+<div class="pg-header">
+    <div class="logo left">老男孩后台管理</div>
+    <div class="rmenus right">
+        <a href="">消息</a>
+        <a href="">邮件</a>
+    </div>
+
+</div>
+<div class="pg-body">
+    <div class="menus">菜单</div>
+    <div class="content">内容
+        <p>111</p>
+    </div>
+</div>
+
 
 </body>
 </html>
